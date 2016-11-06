@@ -40,6 +40,7 @@ try {
 
     $data = json_decode($_POST["json"]);
 
+    $pdo->beginTransaction();
     foreach ($data as $line) {
         $stmt->bindValue(":accx", $line->a->x);
         $stmt->bindValue(":accy", $line->a->y);
@@ -54,7 +55,7 @@ try {
 
         $stmt->execute();
     }
-
+    $pdo->commit();
 } catch (Exception $e) {
     $l->puts($e->getMessage());
 }

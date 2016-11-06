@@ -57,7 +57,7 @@ window.addEventListener("devicemotion", function(e){
 function send() {
     var data = content;
     var r = new XMLHttpRequest();
-    r.open("POST", "/post.php");
+    r.open("POST", "post.php");
     r.setRequestHeader( 'Content-Type', 'application/x-www-form-urlencoded' );
     r.send("json=" + JSON.stringify(data));
 }
