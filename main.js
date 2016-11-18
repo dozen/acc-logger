@@ -1,21 +1,30 @@
+var label;
+var content = [];
+var count = 0;
+var i = 0;
+
 // function
-function obj2NumberFix(obj, fix_deg){
+function obj2NumberFix(obj, fix_deg) {
     return Number(obj).toFixed(fix_deg);
 }
-function print3(id1, value1, id2, value2, id3, value3){
+function print3(id1, value1, id2, value2, id3, value3) {
     print1(id1, value1);
     print1(id2, value2);
     print1(id3, value3);
 }
-function print1(id, value){
+function print1(id, value) {
     var id_obj = document.getElementById(id);
     id_obj.innerHTML = value;
 }
 
-var content = [];
-var i = 0;
+document.getElementById("start").onclick = function () {
+    count = 0;
+    content = [];
+    label = document.getElementById("type").value;
+    window.addEventListener("devicemotion", logger);
+}
 
-window.addEventListener("devicemotion", function(e){
+logger = function (e) {
 
     var interval = e.interval;
     document.getElementById("i-msec").innerHTML = obj2NumberFix(interval, 5);
@@ -42,22 +51,28 @@ window.addEventListener("devicemotion", function(e){
 
     if (i < 60) {
         content[i++] = {
-            "a": { "x": x, "y": y, "z":z },
-            "g": { "x": gx, "y": gy, "z":gz },
-            "r": { "a": a, "b": b, "g": g },
+            "a": {"x": x, "y": y, "z": z},
+            "g": {"x": gx, "y": gy, "z": gz},
+            "r": {"a": a, "b": b, "g": g},
+            "l": label,
             "t": Date.now(),
         };
     } else {
         i = 0;
-        console.log(content);
+        if (count < 4) {
+            count++;
+        } else {
+            window.removeEventListener("devicemotion", logger);
+        }
+
         send();
     }
-});
+}
 
 function send() {
     var data = content;
     var r = new XMLHttpRequest();
     r.open("POST", "post.php");
-    r.setRequestHeader( 'Content-Type', 'application/x-www-form-urlencoded' );
+    r.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     r.send("json=" + JSON.stringify(data));
 }

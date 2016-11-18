@@ -7,7 +7,8 @@
     <title>加速度センサーの値を取る</title>
     <style>
         @import url(http://fonts.googleapis.com/earlyaccess/notosansjapanese.css);
-        html, body{
+
+        html, body {
             font-size: 18px;
             font-family: 'Noto Sans Japanese', sans-serif;
             text-align: center;
@@ -21,6 +22,17 @@
 </header>
 <main>
     <div>
+        <div id="ctl">
+            <select id="type" name="type">
+                <option value="walk">walk</option>
+                <option value="car">car</option>
+                <option value="train">train</option>
+            </select>
+            <button id="start">Start</button>
+        </div>
+        <div>
+            <p><span id="result"></span></p>
+        </div>
         <div id="interval">
             <p><span id="i-msec"></span></p>
         </div>

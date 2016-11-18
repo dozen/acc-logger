@@ -1,17 +1,21 @@
 <?php
 
-class Logger {
+class Logger
+{
     public $log;
 
-    function __construct() {
+    function __construct()
+    {
         $this->log = fopen("log.txt", "a");
     }
 
-    function puts($mes) {
+    function puts($mes)
+    {
         fputs($this->log, $mes . "\n");
     }
 
-    function __destruct() {
+    function __destruct()
+    {
         fclose($this->log);
     }
 
@@ -33,10 +37,11 @@ try {
         rra NUMERIC,
         rrb NUMERIC,
         rrg NUMERIC,
+        label VARCHAR(255),
         time INTEGER
     )");
     $data = json_decode($_POST["json"]);
-    $stmt = $pdo->prepare("INSERT INTO acc(accx, accy, accz, gaccx, gaccy, gaccz, rra, rrb, rrg, time) VALUES(:accx, :accy, :accz, :gaccx, :gaccy, :gaccz, :rra, :rrb, :rrg, :time)");
+    $stmt = $pdo->prepare("INSERT INTO acc(accx, accy, accz, gaccx, gaccy, gaccz, rra, rrb, rrg, label, time) VALUES(:accx, :accy, :accz, :gaccx, :gaccy, :gaccz, :rra, :rrb, :rrg, :label, :time)");
 
 
     //3回までリトライする
@@ -53,6 +58,7 @@ try {
                 $stmt->bindValue(":rra", $line->r->a);
                 $stmt->bindValue(":rrb", $line->r->b);
                 $stmt->bindValue(":rrg", $line->r->g);
+                $stmt->bindValue(":label", $line->l);
                 $stmt->bindValue(":time", $line->t);
 
                 $stmt->execute();
@@ -60,9 +66,12 @@ try {
             $pdo->commit();
             break;
         } catch (PDOException $e) {
+            $l->puts($e->getMessage());
             continue;
         }
     }
+
+    echo "ok";
 } catch (Exception $e) {
     $l->puts($e->getMessage());
 }
